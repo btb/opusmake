@@ -1,0 +1,69 @@
+######################################################################
+#                                                                    #
+#   This Opus Make makefile is a wrapper around the Visual C++ 4.x   #
+#   makefile with name $(_VCProj).mak.                               #
+#                                                                    #
+#   Parameters indicated as <name> are replaced when VC2OPUS copies  #
+#   this file to the project directory.                              #
+#                                                                    #
+######################################################################
+_VCProj	= <project>
+
+
+######################################################################
+#                                                                    #
+#   Set the configuration macro, CFG                                 #
+#                                                                    #
+######################################################################
+%ifndef CFG
+
+# If _VCDir is defined it was a macro passed as an argument from VC++
+# and gives us "Debug" or "Release" as the file component of _VCDir).
+#
+%  ifdef _VCDir
+CFG := <cfg_vcdir> $(_VCDir,F)
+
+# Else, "make debug" does the debug configuration.
+#
+%  elif %make(debug)
+CFG = <cfg_debug>
+debug .PHONY .NODEFAULT : all
+
+# Else, "make release" does the release configuration.
+#
+%  elif %make(release)
+CFG = <cfg_release>
+release .PHONY .NODEFAULT : all
+
+# Else, we don't set CFG. You could give it a value here if you wished.
+#
+#%  else
+#CFG  = <cfg_default>
+
+%  endif
+%endif
+
+
+######################################################################
+#                                                                    #
+#   Options are enabled by defining the following macros.            #
+#   The <_VCLib> macro definition enables object library support.    #
+#   The <_VCQueue> macro definition enables shell-line queuing.      #
+#                                                                    #
+######################################################################
+_VCLib=1				# you can change this definition
+_VCQueue=1				# you can change this definition
+
+
+# User-defined section
+#
+
+
+# Include the VC++ to Opus initialization file, then the converted file.
+#
+%include <vc2opus.ini>			# do not change this line
+%include $(_VCProj).omk			# do not change this line
+
+
+# Additional user-defined section
+#

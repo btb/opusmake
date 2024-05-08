@@ -1,0 +1,88 @@
+%if ! %defined(BUILTINS_NM)
+#
+# If desired, use these lines to inhibit tracing for this file.
+# See also the 3rd and 2nd last lines in this file.
+#
+#OLD_DEBUG := $(.DEBUG)				# get old debug flags
+#.NODEBUG : 1					# turn off tracing
+
+BUILTINS_NM = 1
+
+#
+# NMAKE emulation macros
+#
+AS		= ml
+CC		= cl
+CPP		= cl
+CXX		= cl
+BC		= bc
+COBOL		= cobol
+FOR		= fl32
+PASCAL		= pl
+RC		= rc
+_NMAKE_VER	= 162
+
+
+#
+# NMAKE rules that are defined only if we aren't rejecting the rules.
+#
+%  if ! $(.REJECT_RULES)
+.SUFFIXES :
+.SUFFIXES: .exe .obj .asm .c .cpp .cxx .bas .cbl .f .f90 .for .pas .res .rc 
+
+.asm.exe:
+	$(AS) $(AFLAGS) $*.asm
+.asm.obj:
+	$(AS) $(AFLAGS) /c $*.asm
+.c.exe:
+	$(CC) $(CFLAGS) $<
+.c.obj:
+	$(CC) $(CFLAGS) /c $<
+.cpp.exe:
+	$(CPP) $(CPPFLAGS) $<
+.cpp.obj:
+	$(CPP) $(CPPFLAGS) /c $<
+.cxx.exe:
+	$(CXX) $(CXXFLAGS) $<
+.cxx.obj:
+	$(CXX) $(CXXFLAGS) /c $<
+.bas.obj:
+	$(BC) $(BFLAGS) $*.bas;
+.cbl.exe:
+	$(COBOL) $(COBFLAGS) $*.cbl, $*.exe;
+.cbl.obj:
+	$(COBOL) $(COBFLAGS) $*.cbl;
+.f.exe:
+	$(FOR) $(FFLAGS) $*.f
+.f.obj:
+	$(FOR) /c $(FFLAGS) $*.f
+.f90.exe:
+	$(FOR) $(FFLAGS) $*.f90
+.f90.obj:
+	$(FOR) /c $(FFLAGS) $*.f90
+.for.exe:
+	$(FOR) $(FFLAGS) $*.for
+.for.obj:
+	$(FOR) /c $(FFLAGS) $*.for
+.pas.exe:
+	$(PASCAL) $(PFLAGS) $*.pas
+.pas.obj:
+	$(PASCAL) /c $(PFLAGS) $*.pas
+.rc.res:
+	$(RC) $(RFLAGS) /r $*
+
+#
+# Remove rules that don't exist for NMAKE
+#
+%.exe :
+%.lib :
+%.exe : %.obj
+
+%  endif
+
+#
+# If desired, use these lines to restore tracing for this file.
+#
+#.DEBUG : $(OLD_DEBUG)				# restore debug flags
+#% undef OLD_DEBUG				# remove the temporary macro
+%endif

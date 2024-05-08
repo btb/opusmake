@@ -1,0 +1,18 @@
+#
+# Each subproject builds a library with the same name as the subproject
+# and this name is the same name as the directory.
+#
+PROJECT	:= $(CWD,F)
+
+
+# "ssmake.ini" sets up SourceSafe support and defines the SS_OBJS macro
+#
+%include <ssmake.ini>
+
+
+# The principle target: $(PROJECT.lib)
+#
+# A little trick of the ".NOCOMPARE" attribute keeps Make from reporting
+# "OPUS MAKE: $(PROJECT).lib is up to date"
+#
+$(PROJECT).lib .NOCOMPARE : $(SS_OBJS)

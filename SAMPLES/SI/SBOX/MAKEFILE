@@ -1,0 +1,11 @@
+#
+# Set up the Source Integrity project (SI_PROJECT) and the source-file
+# filter (SI_SRCS), then include "simake.ini" to set up Source Integrity
+# support for this makefile.
+#
+SI_PROJECT	= sandbox.pj		# Name of SI project file
+SI_SRC_TYPES	= *.c *.cpp		# Source files in the project
+
+%include ..\simake.ini
+
+project.exe : $(OBJS)			# OBJS determined by simake.ini

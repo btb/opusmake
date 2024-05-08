@@ -1,0 +1,40 @@
+%if ! %defined(BUILTINS_CB)
+#
+# If desired, use these lines to inhibit tracing for this file.
+# See also the 3rd and 2nd last lines in this file.
+#
+#OLD_DEBUG := $(.DEBUG)				# get old debug flags
+#.NODEBUG : 1					# turn off tracing
+
+BUILTINS_CB = 1
+
+#
+# PolyMake/Configuration Builder emulation macros and rules
+#
+_GetOpts	= -q -w
+
+#
+# PM/CB rules and macros that are defined only if we aren't rejecting the rules.
+#
+% if ! $(.REJECT_RULES)
+AS		= masm
+BC		= bc
+CC		= cl
+.c.obj:
+	$(CC) $(CFLAGS) -c -Fo$(_Target) $(_Source)
+.asm.obj:
+	$(AS) $(AFLAGS) $(_Source),$(_Target);
+.bas.obj:
+	$(BC) $(BFLAGS) $(_Source);
+.exe.com:
+	exe2bin $(_Source) $(_Target)
+.c_v.c .h_v.h .bav.bas .inv.inc:
+	get $(_GetOpts) $(_SourceRev) $(_Source)($(_Target))
+% endif
+
+#
+# If desired, use these lines to restore tracing for this file.
+#
+#.DEBUG : $(OLD_DEBUG)				# restore debug flags
+#% undef OLD_DEBUG				# remove the temporary macro
+%endif

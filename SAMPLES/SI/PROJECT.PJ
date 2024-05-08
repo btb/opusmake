@@ -1,0 +1,6 @@
+--MKS Project--
+$Revision: 1.1.1.1 $
+e_src=E:/SRC
+rcspath=e:/src/opus/make/RCS/%f;e:/src/opus/mm/RCS/%f
+EndOptions
+$(e_src)/OPUS/MM/ALLOC.C a 6.10 

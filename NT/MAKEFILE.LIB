@@ -1,0 +1,33 @@
+# This is a sample LIBRARY template file for OPUS MKMF v6.0
+
+# MKMF automatically maintains the HDRS, EXTHDRS, OBJS and SRCS macros.
+# The LIBRARY macro is the name of the library to be constructed. The
+# DEST macro is used as the directory name the LIBRARY will be installed
+# in. The "install" target listed below uses this macro.
+#
+# The EXTHDRS, HDRS, and SRCS macro are not explicitly used in this makefile
+# but you may have a need for them (e.g. for revision control)
+#
+DEST		= .
+EXTHDRS		=
+HDRS		=
+LIBRARY		= lib.lib
+OBJS		=
+SRCS		=
+MKMF_SRCS	= *.c
+
+
+# This is the only required target. It states that the LIBRARY depends
+# on all files listed in the OBJS macro. The shell lines for updating the
+# library come from the %.lib rule, which is built into Make.
+#
+$(LIBRARY) .LIBRARY :	$(OBJS)
+
+
+# The following targets are optional, and are included here as examples.
+#
+depend:;	@mkmf -f $(INPUTFILE)
+
+install:	$(LIBRARY)
+		@echo Installing $(LIBRARY) in $(DEST)
+		@if not $(DEST)x==.x copy $(LIBRARY) $(DEST)

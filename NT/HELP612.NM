@@ -1,0 +1,15 @@
+
+Syntax:
+        make [ option | name=value | target | @response ] ...
+
+Options:
+/?      Display help message            /K      Keep working on error 
+/A      Build all evaluated targets     /N      Display commands, don't build
+/B      Build if timestamps equal       /NOLOGO Suppress sign-on message
+/C      Suppress output messages        /P      Display makefile summary
+/D      Display build information       /Q      Check timestamps, don't build
+/E      Override env-var macros         /R      Ignore predefined rules/macros
+/EO     Emulate (O)pus Make             /S      Suppress command display
+/F mf   Use makefile 'mf'               /T      Change timestamps, don't build
+/HELP   Display help message            /X xf   Redirect errors to 'xf'
+/I      Ignore non-zero exit codes

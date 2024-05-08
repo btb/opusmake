@@ -1,0 +1,104 @@
+#
+# Top-level makefile
+#
+
+
+#
+# To bootstrap this project we need this project's "ssmake.ini" file extracted.
+# if it doesn't yet exist.
+#
+%if $(.MAKE_MAKEFILE) && ! %exists(ssmake.ini)
+%exec $(MAKE) -M -f "" -b $(BUILTINS) $(MAKEMACROS) ssmake.ini
+%endif
+
+# The "ssmake.ini" file sets up SSPROJECT and some file lists
+#
+%include <ssmake.ini>
+
+
+
+# We get the list of subprojects (and their subprojects, recursively)
+# with the "@PR" macro modifier.
+#
+SS_SUBPRJS	:= $(SSPROJECT,@PR)
+
+
+# For this particular example we assume each subproject produces a
+# library (a .LIB file) with the same name as the subproject. As
+# examples:
+#   1)	subproject "file" (which is mirrored in directory "file"),
+# 	is assumed to produce the library "file\file.lib"
+#
+#   2)	subproject "file/import" (mirrored in directory "file\import")
+#	is assumed to project the library "file\import\import.lib"
+#	
+#
+# The only reason this is important is for building the top-level
+# "product.exe".  We prefer to rebuild "project.exe" whenever any of
+# its component libraries change, so we chose a convenient library
+# name for use as a dependency of "product.exe"
+#
+#
+#
+# This convoluted macro definition:
+#   1)	maps names of the form  <x>      into  <x>\<x>.lib
+#   2)	maps names of the form  <y>/<x>  into  <y>\<x>\<x>.lib
+#
+LIBS		:= $(SS_SUBPRJS,N/,s~.*~&/&.lib~,/=\) \
+           	   $(SS_SUBPRJS,M/,s~\(.*/\)\(.*\)~\1\2/\2.lib~,/=\)
+
+
+#
+# The main target
+#
+product.exe : $(SS_OBJS) $(LIBS)
+
+
+# The recursion part of the makefile.
+#
+# We recurse only from the top-level makefile into each subproject,
+# no matter how deep below this directory.
+#
+%if ! %null(LIBS)
+
+#
+# All libraries are built in exactly the same way
+#
+$(LIBS) .MAKE .REREAD .NODEFAULT .ALWAYS .SILENT :
+
+
+# If "make -M" the library's directory may not exist yet, so create it
+#
+	%if $(.MAKE_MAKEFILE) && ! %dir($(@,D))
+	mkdir $(@,D)
+	%endif
+
+	%echo Building $@ ...
+
+# Recurse into the library's directory
+#
+	%chdir $(@,D)
+
+# If "make -M" we need to pass SSPROJECT. We do this in the environment
+# because we don't want to mangle any double quotes around SSPROJECT.
+#
+%if $(.MAKE_MAKEFILE)
+	%setenv SSPROJECT=$(SSPROJECT,$$=$$$$)/$(@,D,\\=/)
+%endif
+	make $(MFLAGS) $(MAKEMACROS) -b $(BUILTINS,A)
+
+
+# Come back to this directory for the next recursion
+#
+	%chdir $(MAKEDIR)
+	%echo Done     $@ ...
+
+
+
+#
+# A shorthand way of building a particular subproject. If you do
+# something like "make file\import" this target produces the same
+# result as if you did "make file\import\import.lib"
+#
+$(LIBS,D) .MAKE .NODEFAULT .ALWAYS : $@\$(@,F).lib
+%endif

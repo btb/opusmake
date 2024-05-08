@@ -1,0 +1,42 @@
+
+Syntax:
+        make [ option | name=value | target | @file ] ...
+
+For PolyMake emulation the following are supported:
+
+@ file  Includes command file.        /I         Ignores exit codes.
+/?,/H   Displays help message.        /INIT file Specifies .INI file.
+/#1     Invokes debug read mode.      /K         Keeps working despite errors.
+/#2     Retains local input scripts.  /N         Selects no-execution build.
+/#4     Suppresses sign-on message.   /NMAKE     Selects MS NMAKE emulation.
+/#8     Displays elapsed time.        /NOLOGO    Suppresses sign-on.
+/A      Forces all-target rebuild.    /P         Displays makefile summary.
+/B file Specifies builtins file.      /Q         Selects quiet mode.
+/D      Specifies debug build mode.   /R         Rejects .INI and BUILTINS.
+/E      Gives precedence to env. var. /S         Selects silent mode.
+/EO     Emulate (O)pus Make.          /T         Touches targets only.
+/F file Specifies makefile.           /V         Displays conditional lines.
+/HELP   Displays help message.        /X file    Sends error messages to file.
+
+
+For Configuration Builder v5.x the following are also supported:
+   -All                              -KeepWorking
+   -B filename                       -NoEnvMacros
+   -Batch [filename]                 -NoExecute
+   -Debug                            -NoLogo
+   -Diag code                        -NoRedefine
+   -DirectAll filename               -Quiet
+   -DirectErrors filename | -        -Redirect filename | -
+   -DirectOutput filename | -        -Reject
+   -Emulate builder | nmake          -Script filename
+   -Help                             -Silent
+   -Ignore                           -Summary
+   -Include filename                 -Touch
+   -Init [filename]                  -View
+
+The following are *not* supported by Opus Make:
+   /C and -Batch   Create batch file.
+   -Compile        Compile script.
+   -Emulate make   Emulate Microsoft Make.
+   -NoEnvInherit   Don't provide environment to child processes.
+   -Rebuild        Rebuild a particular version (requires footprinting).
